@@ -2,6 +2,6 @@ data/
 
 .ipynb_checkpoints/
 
-submission.csv
+*.csv
 
 

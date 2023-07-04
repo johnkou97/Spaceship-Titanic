@@ -9,6 +9,8 @@ from sklearn.metrics import accuracy_score
 train_data = pd.read_csv('data/train.csv')
 test_data = pd.read_csv('data/test.csv')
 
+# Missing age values are filled with the median age
+train_data['Age'] = train_data['Age'].fillna(train_data['Age'].median())
 
 # Drop missing values
 train_data = train_data.dropna(axis=0)
@@ -43,17 +45,18 @@ test_data[['Age', 'RoomService', 'FoodCourt', 'ShoppingMall', 'Spa', 'VRDeck']] 
 # Ensure the test data is encoded in the same manner as the training data with the align command
 X, X_test = X.align(test_data, join='left', axis=1)
 print(X.shape)
-print(test_data.shape)
+print(X_test.shape)
 
 
 # handle missing values
+X_test['Age'] = X_test['Age'].fillna(train_data['Age'].median())
 X_test = X_test.fillna(0)
 
 test_preds = model.predict(X_test)
 # Save test predictions to file
 output = pd.DataFrame({'PassengerId': test_data.PassengerId,
                           'Transported': test_preds})
-output.to_csv('submission.csv', index=False)
+output.to_csv('logistic.csv', index=False)
 
 
 
