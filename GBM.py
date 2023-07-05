@@ -30,7 +30,7 @@ y = train_data['Transported']
 X_train, X_valid, y_train, y_valid = train_test_split(X, y, random_state=1)
 
 # Train the model
-model = GradientBoostingClassifier(random_state=1)
+model = GradientBoostingClassifier(random_state=42)
 model.fit(X_train, y_train)
 
 # Get predictions
@@ -57,3 +57,13 @@ test_preds = model.predict(X_test)
 output = pd.DataFrame({'PassengerId': test_data.PassengerId,
                             'Transported': test_preds})
 output.to_csv('gbm.csv', index=False)
+
+# Train with full dataset
+model.fit(X, y)
+
+test_preds = model.predict(X_test)
+
+# Save test predictions to file
+output = pd.DataFrame({'PassengerId': test_data.PassengerId,
+                            'Transported': test_preds})
+output.to_csv('gbm_full.csv', index=False)
