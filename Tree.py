@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import StandardScaler
 
 # Load the data
 train_data = pd.read_csv('data/train.csv')
@@ -15,6 +16,10 @@ train_data = train_data.dropna(axis=0)
 
 # Encode categorical variables
 train_data = pd.get_dummies(train_data, columns=['HomePlanet', 'Cabin', 'Destination'])  # One-hot encode categorical columns
+
+# Scale numerical features
+scaler = StandardScaler()
+train_data[['Age', 'RoomService', 'FoodCourt', 'ShoppingMall', 'Spa', 'VRDeck']] = scaler.fit_transform(train_data[['Age', 'RoomService', 'FoodCourt', 'ShoppingMall', 'Spa', 'VRDeck']])
 
 # Split the data into features (X) and target variable (y)
 X = train_data.drop(['PassengerId', 'Transported', 'Name'], axis=1)
@@ -35,6 +40,7 @@ print("Accuracy:", accuracy_score(y_valid, preds))
 
 # Make predictions on the test set use the same features as the training set.
 test_data = pd.get_dummies(test_data, columns=['HomePlanet', 'Cabin', 'Destination'])  # One-hot encode categorical columns
+test_data[['Age', 'RoomService', 'FoodCourt', 'ShoppingMall', 'Spa', 'VRDeck']] = scaler.transform(test_data[['Age', 'RoomService', 'FoodCourt', 'ShoppingMall', 'Spa', 'VRDeck']])
 # Ensure the test data is encoded in the same manner as the training data with the align command
 X, X_test = X.align(test_data, join='left', axis=1)
 print(X.shape)
